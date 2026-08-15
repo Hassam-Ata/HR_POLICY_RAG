@@ -11,7 +11,6 @@ from hr_assistant.document_loader import load_document
 from hr_assistant.llm import get_llm
 from hr_assistant.splitter import split_into_chunks
 from hr_assistant.tools import create_search_tool
-from hr_assistant.tracing import check_langsmith_tracing
 from hr_assistant.guardrails import REFUSAL_MESSAGE , check_input , check_output
 
 from hr_assistant.vector_store import (
@@ -21,24 +20,24 @@ from hr_assistant.vector_store import (
     vector_store_exists,
 )
 
+from hr_assistant.tracing import check_langsmith_tracing
 
 from hr_assistant.logger import get_logger
 logger = get_logger(__name__)
-
 
 
 # data ingestion
 
 def build_vector_store_for_document(file_path: str = config.DATA_FILE_PATH):
     """Load + split + embed the document, 
-    reusing the FAISS index collection if we have one."""
+    reusing the Qdrant Cloud collection if we have one."""
     if vector_store_exists():
-        print("Found an existing FAISS index, connecting to it (fast, no re-embedding).")
-        logger.info("FAISS DB already exists, reusing it")
+        print("Found an existing Qdrant Cloud collection, connecting to it (fast, no re-embedding).")
+        logger.info("Qdrant Cloud collection already exists, reusing it")
         return load_vector_store()
 
-    print("No FAISS index found, building one from scratch...")
-    logger.info("No FAISS index found, building one from scratch...")
+    print("No Qdrant Cloud collection found, building one from scratch...")
+    logger.info("No Qdrant Cloud collection found, building one from scratch")
     documents = load_document(file_path)
     chunks = split_into_chunks(documents)
     print(f"Loaded '{file_path}' and split it into {len(chunks)} chunks.")
@@ -61,6 +60,7 @@ def build_hr_assistant(file_path: str = config.DATA_FILE_PATH):
 
     llm = get_llm()
     agent = create_hr_agent(llm, [search_tool])
+
     logger.info("HR assistant is ready to take questions")
     return agent
 
