@@ -26,3 +26,8 @@ ipykernel
 # web app 
 
 streamlit
+
+# LLM gateways
+
+portkey-ai
+langchain-openai

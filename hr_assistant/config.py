@@ -11,6 +11,8 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 JINA_API_KEY = os.getenv("JINA_API_KEY")
 
+#GATEWAY
+PORTKEY_API_KEY = os.getenv("PORTKEY_API_KEY")
 
 # GUARD MODEL 
 
